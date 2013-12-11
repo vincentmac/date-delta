@@ -1,24 +1,16 @@
 /*!
  * @license
- * Date-Delta 0.0.1
+ * Date-Delta 0.0.3
  * Copyright 2013 Vincent Mac <vincent@simplicity.io>
  *
  */
 
-;(function() {
+(function() {
+  'use strict';
 
-  var DateDelta;
-  if (typeof module !== 'undefined' && module.exports) {
-    module.exports = DateDelta;
+  var root = this;
 
-  } else if (typeof define === 'function' && define.amd) {
-    define('DateDelta', function() {
-
-      return DateDelta;
-    });
-  }
-
-  DateDelta = function DateDelta(d) {
+  var DateDelta = function DateDelta(d) {
     this.initialize(d);
   };
 
@@ -75,7 +67,7 @@
    * @param {Date} time
    * @returns {String} - minutes delta from current time
    */
-  DateDelta.prototype.timeDeltaWords = function(time) {
+  DateDelta.prototype.DateDeltaWords = function(time) {
     var delta; // time delta in minutes
     delta = this.minutesAgo(time);
 
@@ -88,7 +80,7 @@
     } else if (delta >= 45 && delta <= 89) {
       return 'about' + ' 1 hour';
     } else if (delta >= 90 && delta <= 1439) {
-      return 'about ' + (Math.floor(delta / 60)) + 'hours';
+      return (Math.floor(delta / 60)) + ' hours';
     } else if (delta >= 1440 && delta <= 2519) {
       return '1 day'
     } else if (delta >= 2520 && delta <= 43199) {
@@ -107,4 +99,49 @@
       return 'about ' + (Math.floor(delta / 525600)) + ' years';
     }
   };
-})();
+
+  function makeGlobal(deprecate) {
+    var warned = false,
+      local_DateDelta = DateDelta;
+    /*global ender:false */
+    if (typeof ender !== 'undefined') {
+      return;
+    }
+    // here, `this` means `window` in the browser, or `global` on the server
+    // add `DateDelta` as a global object via a string identifier,
+    // for Closure Compiler "advanced" mode
+    if (deprecate) {
+      this.DateDelta = function() {
+        if (!warned && console && console.warn) {
+          warned = true;
+          console.warn(
+            'Accessing DateDelta through the global scope is ' +
+            'deprecated, and will be removed in an upcoming ' +
+            'release.');
+        }
+        return local_DateDelta.apply(null, arguments);
+      };
+    } else {
+      // this['DateDelta'] = DateDelta;
+      root['DateDelta'] = DateDelta;
+    }
+  }
+
+  // module.exports = DateDelta;
+  // CommonJS module is defined
+  if (typeof module !== 'undefined' && module.exports) {
+    module.exports = DateDelta;
+    // makeGlobal(true);
+  } else if (typeof define === 'function' && define.amd) {
+    define('DateDelta', function(require, exports, module) {
+      if (module.config().noGlobal !== true) {
+        // If user provided noGlobal, he is aware of global
+        makeGlobal(module.config().noGlobal === undefined);
+      }
+
+      return DateDelta;
+    });
+  } else {
+    makeGlobal();
+  }
+}).call(this);

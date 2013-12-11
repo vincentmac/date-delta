@@ -1,1 +1,1 @@
-module.exports = require('./dist/dateDelta.js');
+module.exports = require('./dateDelta.js');
