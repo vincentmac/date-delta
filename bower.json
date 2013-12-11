@@ -1,7 +1,7 @@
 {
   "name": "date-delta",
   "main": "index.js",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "homepage": "https://github.com/vincentmac/date-delta",
   "authors": [
     "Vincent Mac <vincent@simplicity.io>"
