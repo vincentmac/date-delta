@@ -1,0 +1,23 @@
+{
+  "name": "date-delta",
+  "main": "index.js",
+  "version": "0.0.1",
+  "homepage": "https://github.com/vincentmac/date-delta",
+  "authors": [
+    "Vincent Mac <vincent@simplicity.io>"
+  ],
+  "description": "Lightweight Datetime Delta for JavaScript",
+  "keywords": [
+    "date",
+    "time",
+    "fromNow"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
